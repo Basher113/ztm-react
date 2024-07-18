@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router";
+import { UserContext } from "../../contexts/UserContext"
 import { myCreateUserWithEmailAndPassword, createUserDocumentFromAuth } from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/FormInput";
 import Button from "../button/Button";
@@ -23,8 +24,8 @@ function SignUp() {
             return;
         }
         try {
-            const resp = await myCreateUserWithEmailAndPassword(email, password)
-            const { user } = resp
+            const { user } = await myCreateUserWithEmailAndPassword(email, password)
+
             await createUserDocumentFromAuth(user, { displayName })
             navigate('/')
         } catch (error) {
@@ -40,14 +41,13 @@ function SignUp() {
         const { name, value } = event.target;
         setFormField({ ...formField, [name]: value })
     }
-    console.log(formField)
 
     return (
         <div className="sign-up-container">
             <h2>Don't have an account?</h2>
             <span>Sign in with your email and password</span>
             <form onSubmit={onSubmitHandler}>
-                <FormInput label='Display Name' type="text" onChangeHandler={onChangeHandler} value={displayName} />
+                <FormInput label='Display Name' name='displayName' type="text" onChangeHandler={onChangeHandler} value={displayName} />
 
                 <FormInput label='Email' type="email" name='email' onChangeHandler={onChangeHandler} value={email} />
 
