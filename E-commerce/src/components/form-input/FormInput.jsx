@@ -1,9 +1,9 @@
 import './FormInput.styles.scss'
-function FormInput({ label, type, name, id, onChangeHandler, value }) {
+function FormInput({ label, type, name, onChangeHandler, value }) {
     return (
         <div className="group">
-            <input type={type} name={name} id={id} required onChange={onChangeHandler} />
-            <label htmlFor={id} className={value.length && 'shrink'}>{label}</label>
+            <input type={type} name={name} required onChange={onChangeHandler} />
+            <label className={value.length && 'shrink'}>{label}</label>
         </div>
     );
 }

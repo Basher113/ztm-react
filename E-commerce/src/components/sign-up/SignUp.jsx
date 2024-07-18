@@ -47,13 +47,13 @@ function SignUp() {
             <h2>Don't have an account?</h2>
             <span>Sign in with your email and password</span>
             <form onSubmit={onSubmitHandler}>
-                <FormInput label='Display Name' type="text" id="displayName" name='displayName' onChangeHandler={onChangeHandler} value={displayName} />
+                <FormInput label='Display Name' type="text" onChangeHandler={onChangeHandler} value={displayName} />
 
-                <FormInput label='Email' type="email" id="email" name='email' onChangeHandler={onChangeHandler} value={email} />
+                <FormInput label='Email' type="email" name='email' onChangeHandler={onChangeHandler} value={email} />
 
-                <FormInput label='Password' type="password" id="password" name='password' onChangeHandler={onChangeHandler} value={password} />
+                <FormInput label='Password' type="password" name='password' onChangeHandler={onChangeHandler} value={password} />
 
-                <FormInput label='Confirm Password' type="password" id="confirmPassword" name='confirmPassword' onChangeHandler={onChangeHandler} value={confirmPassword} />
+                <FormInput label='Confirm Password' type="password" name='confirmPassword' onChangeHandler={onChangeHandler} value={confirmPassword} />
 
                 <Button type='submit'>Sign Up</Button>
 
