@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 import { useContext } from "react";
 
 import { UserContext } from "../../contexts/UserContext";
-import { CartDropDownContext } from "../../contexts/CartDropdownContext"
+import { CartContext } from "../../contexts/CartContext"
 
 import { signOutUser } from "../../utils/firebase/firebase.utils";
 
@@ -14,7 +14,7 @@ import './Navigations.styles.scss'
 
 function Navigation() {
     const { currentUser } = useContext(UserContext);
-    const { cartDropDownIsVisible } = useContext(CartDropDownContext)
+    const { cartDropDownIsVisible } = useContext(CartContext)
 
     return (
         <>
