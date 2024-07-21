@@ -1,8 +1,8 @@
 import FormInput from "../../components/form-input/FormInput";
-import Button from "../../components/button/Button";
-import { UserContext } from "../../contexts/UserContext";
-import { useState, useContext } from "react";
-import { signInWithGooglePopup, signInUserAuthWithEmailAndPassword, createUserDocumentFromAuth } from "../../utils/firebase/firebase.utils";
+import Button from "../../components/button/Button";;
+import { useState } from "react";
+import { signInWithGooglePopup, signInUserAuthWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
+import { useNavigate } from "react-router";
 import './SignIn.styles.scss'
 
 const defaultFormField = {
@@ -13,12 +13,14 @@ const defaultFormField = {
 function SignIn() {
     const [formField, setFormField] = useState(defaultFormField);
     const { email, password } = formField;
+    const navigate = useNavigate()
 
     const onSubmitHandler = async (event) => {
         event.preventDefault();
 
         try {
             await signInUserAuthWithEmailAndPassword(email, password);
+            navigate('..')
         } catch (error) {
             console.log(error)
             if (error.code === 'auth/invalid-credential') {

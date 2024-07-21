@@ -55,8 +55,8 @@ export const createCollectionAndDocuments = async (collectionKey, objectsToAdd) 
             batch.set(docRef, object) // Set the value to the object
         })
         await batch.commit()
-        console.log('done')
     } catch (error) {
+        alert('Error creating collection and documents: Please try again',)
         console.log('Error creating collection and documents:', error.message)
     }
 }

@@ -14,9 +14,9 @@ function CartDropDown() {
     return (
         <div className="cart-dropdown-container">
             <div className="cart-items">
-                {cartItems.map((item) => (
+                {cartItems.length ? (cartItems && cartItems.map((item) => (
                     <CartItem key={item.id} product={item} />
-                ))}
+                ))) : <span className='empty-message'>No items yet</span>}
             </div>
 
 
