@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useReducer } from "react";
 
 export const CartContext = createContext({
     cartDropDownIsVisible: false,
@@ -47,35 +47,72 @@ const clearCartItem = (cartItems, cartItemToRemove) => {
     });
 }
 
+const initial_state = {
+    cartItems: [],
+    cartCount: 0,
+    total: 0,
+    cartDropDownIsVisible: false,
+}
+
+const ACTION_TYPES = {
+    SET_CART_ITEMS: 'SET_CART_ITEMS',
+    SET_CART_DROPDOWN_IS_VISIBLE: 'SET_CART_DROPDOWN_IS_VISIBLE'
+}
+
+const cartReducer = (state, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case ACTION_TYPES.SET_CART_ITEMS:
+            return {
+                ...state,
+                ...payload
+            };
+        case ACTION_TYPES.SET_CART_DROPDOWN_IS_VISIBLE:
+            return {
+                ...state,
+                cartDropDownIsVisible: payload
+            }
+        default:
+            throw new Error(`unhandled type ${type} from cartReducer`)
+    }
+}
+
 
 export const CartContextProvider = ({ children }) => {
-    const [cartDropDownIsVisible, setCartDropDownIsVisible] = useState(false);
-    const [cartItems, setCartItems] = useState([]);
-    const [cartCount, setCartCount] = useState(0);
-    const [total, setTotal] = useState(0);
 
+    const [state, dispatch] = useReducer(cartReducer, initial_state);
+    const { cartDropDownIsVisible, cartItems, cartCount, total } = state;
 
+    const setCartDropDownIsVisible = () => {
+        dispatch({ type: ACTION_TYPES.SET_CART_DROPDOWN_IS_VISIBLE, payload: !cartDropDownIsVisible });
+    }
 
-    useEffect(() => {
-        setCartCount(cartItems.reduce((accumulator, item) => accumulator + item.quantity, 0))
-        setTotal(cartItems.reduce((accumulator, item) => accumulator + item.quantity * item.price, 0))
-    }, [cartItems])
+    const updateCartItems = (newCartItems) => {
+        const cartCount = newCartItems.reduce((accumulator, item) => accumulator + item.quantity, 0);
+        const total = newCartItems.reduce((accumulator, item) => accumulator + item.quantity * item.price, 0);
+        const result = {
+            cartCount,
+            total,
+            cartItems: newCartItems
+        }
+        console.log(result);
+        dispatch({ type: ACTION_TYPES.SET_CART_ITEMS, payload: result })
+    }
 
     const addItemToCart = (productToAdd) => {
-        setCartItems(addCartItem(cartItems, productToAdd))
+        dispatch({ type: ACTION_TYPES.SET_CART_ITEMS, payload: updateCartItems(addCartItem(cartItems, productToAdd)) })
     }
 
     const removeItemFromCart = (cartItemToRemove) => {
-        setCartItems(removeCartItem(cartItems, cartItemToRemove))
+        dispatch({ type: ACTION_TYPES.SET_CART_ITEMS, payload: updateCartItems(removeCartItem(cartItems, cartItemToRemove)) })
     }
 
-    const clearCartItemFromCart = (cartItemToRemove) => {
-        setCartItems(clearCartItem(cartItems, cartItemToRemove))
+    const clearItemFromCart = (cartItemToRemove) => {
+        dispatch({ type: ACTION_TYPES.SET_CART_ITEMS, payload: updateCartItems(clearCartItem(cartItems, cartItemToRemove)) })
     }
 
 
-
-    const value = { cartDropDownIsVisible, setCartDropDownIsVisible, cartItems, addItemToCart, cartCount, total, removeItemFromCart, clearCartItemFromCart };
+    const value = { cartDropDownIsVisible, setCartDropDownIsVisible, cartItems, addItemToCart, cartCount, total, removeItemFromCart, clearItemFromCart };
 
     return (
         <CartContext.Provider value={value}>{children}</CartContext.Provider>
