@@ -1,21 +1,21 @@
 import { Outlet } from "react-router-dom";
-import { useContext } from "react";
-
-import { UserContext } from "../../contexts/UserContext";
-import { CartContext } from "../../contexts/CartContext"
+import { useSelector } from "react-redux";
 
 import { signOutUser } from "../../utils/firebase/firebase.utils";
+import { currentUserSelector } from "../../reducers/user/user.selector.js";
 
 import CrownLogo from '../../assets/crown.svg?component'
 import CartIcon from "../../components/cart-icon/CartIcon";
 import CartDropDown from "../../components/cart-dropdown/CartDropdown";
 
 import { LogoContainer, NavigationContainer, NavLinksContainer, NavLink } from './Navigation.styles.jsx'
+import { selectCartDropdownIsVisible } from "../../reducers/cart/cart.selector.js";
 
 
 function Navigation() {
-    const { currentUser } = useContext(UserContext);
-    const { cartDropDownIsVisible } = useContext(CartContext)
+    const currentUser = useSelector(currentUserSelector)
+    const cartDropDownIsVisible = useSelector(selectCartDropdownIsVisible)
+    // const { cartDropDownIsVisible } = useContext(CartContext)
 
     return (
         <>

@@ -61,20 +61,21 @@ export const createCollectionAndDocuments = async (collectionKey, objectsToAdd) 
     }
 }
 
-export const getCategoriesAndDocument = async () => {
+export const getCategoriesAndDocuments = async () => {
     const collectionRef = collection(db, 'categories'); // get me the collection referrence of the collection categories in my db
 
     const q = query(collectionRef);
 
     const querySnapshot = await getDocs(q); // give me the documents snapshot of whatever it is you get from querying the collection of categories
-    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-        // Returns an object that contains key, value pair for title, items of document
-        // ex {'sneakers': [sneaker1, sneaker2, ], 'hats': [hat1, hat2, ]}
-        const { title, items } = docSnapshot.data();
-        acc[title.toLowerCase()] = items;
-        return acc;
-    }, {})
-    return categoryMap;
+    return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
+    //     .reduce((acc, docSnapshot) => {
+    //     // Returns an object that contains key, value pair for title, items of document
+    //     // ex {'sneakers': [sneaker1, sneaker2, ], 'hats': [hat1, hat2, ]}
+    //     const { title, items } = docSnapshot.data();
+    //     acc[title.toLowerCase()] = items;
+    //     return acc;
+    // }, {})
+
 }
 
 
