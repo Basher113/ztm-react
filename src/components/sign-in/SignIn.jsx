@@ -1,9 +1,14 @@
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+
+import { signInUserAuthWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
+import { signInWithGoogleStart, signInWithEmailAndPasswordStart } from "../../reducers/user/user.action";
+
 import FormInput from "../../components/form-input/FormInput";
 import Button from "../../components/button/Button";;
-import { useState } from "react";
-import { signInWithGooglePopup, signInUserAuthWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
-import { useNavigate } from "react-router";
 import './SignIn.styles.scss'
+
 
 const defaultFormField = {
     email: '',
@@ -11,22 +16,15 @@ const defaultFormField = {
 }
 
 function SignIn() {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     const [formField, setFormField] = useState(defaultFormField);
     const { email, password } = formField;
-    const navigate = useNavigate()
 
     const onSubmitHandler = async (event) => {
         event.preventDefault();
-
-        try {
-            await signInUserAuthWithEmailAndPassword(email, password);
-            navigate('..')
-        } catch (error) {
-            console.log(error)
-            if (error.code === 'auth/invalid-credential') {
-                alert('email or password is incorrect')
-            }
-        }
+        dispatch(signInWithEmailAndPasswordStart(email, password))
     }
 
     const onChangeHandler = (event) => {
@@ -39,12 +37,7 @@ function SignIn() {
     }
 
     const signInWithGoogle = async () => {
-        try {
-            await signInWithGooglePopup();
-        } catch (e) {
-            console.error(e)
-        }
-
+        dispatch(signInWithGoogleStart())
     }
 
     return (

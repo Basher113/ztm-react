@@ -1,6 +1,7 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
-import { myCreateUserWithEmailAndPassword, createUserDocumentFromAuth } from "../../utils/firebase/firebase.utils";
+import { useDispatch } from "react-redux";
+import { signUpStart } from "../../reducers/user/user.action";
 import FormInput from "../form-input/FormInput";
 import Button from "../button/Button";
 import './SignUp.styles.scss'
@@ -15,6 +16,8 @@ function SignUp() {
     const [formField, setFormField] = useState(defaultFormfield);
     const { displayName, email, password, confirmPassword } = formField;
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+
 
     const onSubmitHandler = async (event) => {
         event.preventDefault()
@@ -22,18 +25,7 @@ function SignUp() {
             alert('Password do not match')
             return;
         }
-        try {
-            const { user } = await myCreateUserWithEmailAndPassword(email, password)
-
-            await createUserDocumentFromAuth(user, { displayName })
-            navigate('/')
-        } catch (error) {
-            if (error.code === 'auth/email-already-in-use') {
-                alert('Email already in use.')
-            }
-            console.log('Error signing up with email and password', error)
-        }
-
+        dispatch(signUpStart(email, password, displayName))
     }
 
     const onChangeHandler = (event) => {

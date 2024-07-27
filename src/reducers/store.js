@@ -1,11 +1,10 @@
-import storage from "redux-persist/lib/storage";
-// import logger from "redux-logger";
-
 import { compose, createStore, applyMiddleware } from "redux";
 import { persistReducer, persistStore } from "redux-persist";
-import { thunk } from "redux-thunk";
+import storage from "redux-persist/lib/storage";
+import createSagaMiddleware from 'redux-saga'
 
 import { rootReducer } from "./root-reducer";
+import { rootSaga } from "./root-saga";
 
 const loggerMiddleware = (store) => (next) => (action) => {
     if (!action.type) {
@@ -21,7 +20,9 @@ const loggerMiddleware = (store) => (next) => (action) => {
     console.log('next state: ', store.getState());
 };
 
-const midllewares = [loggerMiddleware, thunk];
+const sagaMiddleware = createSagaMiddleware();
+
+const midllewares = [loggerMiddleware, sagaMiddleware];
 const composedEnhancers = compose(applyMiddleware(...midllewares));
 
 const persistConfig = {
@@ -32,6 +33,8 @@ const persistConfig = {
 
 const reducerPersist = persistReducer(persistConfig, rootReducer)
 
-export const store = createStore(reducerPersist, undefined, composedEnhancers);
 
+export const store = createStore(reducerPersist, undefined, composedEnhancers);
+sagaMiddleware.run(rootSaga)
 export const persistor = persistStore(store)
+
